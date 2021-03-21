@@ -22,7 +22,7 @@ module HegwinWang
       g.template_engine     :jbuilder
       g.test_framework      :rspec
       g.factory_bot         dir: 'spec/factories'
-      g.fixture_replacement :factory_girl, dir: 'spec/factories'
+      g.fixture_replacement :factory_bot, dir: 'spec/factories'
     end
   end
 end
