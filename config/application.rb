@@ -18,5 +18,11 @@ module HegwinWang
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.generators do |g|
+      g.template_engine     :jbuilder
+      g.test_framework      :rspec
+      g.factory_bot         dir: 'spec/factories'
+      g.fixture_replacement :factory_girl, dir: 'spec/factories'
+    end
   end
 end
