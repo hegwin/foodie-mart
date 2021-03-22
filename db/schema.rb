@@ -10,12 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_22_124052) do
+ActiveRecord::Schema.define(version: 2021_03_22_131704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
   enable_extension "plpgsql"
+
+  create_table "meals", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "price", precision: 8, scale: 2
+    t.string "image", default: "https://picsum.photos/id/312/200/200"
+    t.boolean "online", default: true
+    t.integer "restaurant_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name", "restaurant_id"], name: "index_meals_on_name_and_restaurant_id"
+    t.index ["name"], name: "index_meals_on_name"
+    t.index ["restaurant_id"], name: "index_meals_on_restaurant_id"
+  end
 
   create_table "restaurants", force: :cascade do |t|
     t.string "name"
