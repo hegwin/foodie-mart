@@ -10,9 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_21_164219) do
+ActiveRecord::Schema.define(version: 2021_03_22_124052) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "cube"
+  enable_extension "earthdistance"
   enable_extension "plpgsql"
 
   create_table "restaurants", force: :cascade do |t|
@@ -20,6 +22,13 @@ ActiveRecord::Schema.define(version: 2021_03_21_164219) do
     t.string "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "online", default: true
+    t.float "latitude", default: 31.229818664563933
+    t.float "longitude", default: 121.4567612447622
+    t.integer "user_id"
+    t.index "ll_to_earth(latitude, longitude)", name: "index_restaurants_on_coord"
+    t.index ["online"], name: "index_restaurants_on_online"
+    t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
