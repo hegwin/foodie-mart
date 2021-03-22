@@ -2,17 +2,14 @@ class Api::V1::SessionsController < Api::V1::BaseController
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
 
   def create
-    params.require(:email)
-    params.require(:password)
-
-    user = User.find_by(email: params[:email])&.authenticate(params[:password])
+    user = User.find_by(email: params.require(:email))&.authenticate(params.require(:password))
 
     if user
-      token = AuthnService.call(user.to_h)
+      token = AuthnService.generate_token(user.id)
 
-      render json: { token: token, user: user.to_h }, status: :created
+      render json: { token: token, user_id: user.id }, status: :created
     else
-      render json: { error: 'Invalid email/password combination' }, status: :unprocessable_entity
+      head :unauthorized
     end
   end
 

@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :restaurants, only: :index
-      resources :sessions, only: %i[create destroy]
+      resources :sessions, only: :create
+      resources :orders, only: :index
     end
   end
 end

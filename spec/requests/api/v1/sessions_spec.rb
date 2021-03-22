@@ -14,13 +14,14 @@ RSpec.describe 'Api::V1::Sessions', type: :request do
       post '/api/v1/sessions', params: { email: user.email, password: 'P4$$word' }
 
       result = JSON.parse(response.body)
-      expect(result.keys).to include('token', 'user')
+      expect(result.keys).to include('token', 'user_id')
+      expect(result['user_id']).to eq user.id
     end
 
-    it 'returns error when password is incorrect' do
+    it 'returns unauthorized when password is incorrect' do
       post '/api/v1/sessions', params: { email: user.email, password: 'wrongword' }
 
-      expect(response).to have_http_status(422)
+      expect(response).to have_http_status(401)
     end
 
     it 'renders error when email is missing' do
