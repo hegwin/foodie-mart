@@ -1,0 +1,78 @@
+# This is the configuration used to check the rubocop source code.
+# Check out: https://github.com/bbatsov/rubocop
+
+inherit_mode:
+  merge:
+    - Include
+
+# several of these are disabled
+# they are included so the "goals" are still visible
+# inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.7
+  Exclude:
+    - "bin/*"
+    - "db/schema.rb"
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver
+
+Metrics/AbcSize:
+  Enabled: false
+  Max: 25
+
+Metrics/BlockLength:
+  Exclude:
+    - "config/environments/*.rb"
+    - "config/routes.rb"
+    - "spec/**/*.rb"
+
+Metrics/ClassLength:
+  Exclude:
+    - "app/clients/looker_client.rb"
+
+Metrics/LineLength:
+  Enabled: false # outside of immediate scope
+  Max: 120
+
+Metrics/MethodLength:
+  Enabled: false
+  CountComments: false
+  Max: 15
+  Exclude:
+    - "spec/**/*.rb"
+
+Metrics/ModuleLength:
+  Exclude:
+    - "spec/**/*.rb"
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    "%i": []
+    "%w": []
+
+Style/RescueStandardError:
+  Exclude:
+    - lib/tasks/rabbitmq.rake
+
+Style/StringLiterals:
+  Enabled: false # todo: enable this
+

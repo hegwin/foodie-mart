@@ -1,4 +1,3 @@
 class HegwinController < ApplicationController
-  def index
-  end
+  def index; end
 end

@@ -8,7 +8,7 @@ RSpec.describe AuthnService do
       decoded = JWT.decode token, described_class::HMAC_SECRET, true, { algorithm: described_class::CRYPTO_ALGORITHM }
 
       expect(decoded).to eq [
-        { 'user_id'  => 1 }, # payload
+        { 'user_id' => 1 }, # payload
         { 'alg' => described_class::CRYPTO_ALGORITHM } # header
       ]
     end
