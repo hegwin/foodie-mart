@@ -1,12 +1,12 @@
 class Meal < ApplicationRecord
   belongs_to :restaurant
 
-  def to_screenshot
+  def to_snapshot
     {
       name: name,
       description: description,
       price: price,
-      image: image
+      image_url: image_url
     }
   end
 end

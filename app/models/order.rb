@@ -7,6 +7,10 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :order_items
 
+  before_create :calculate_total
+
+  audited only: :status
+
   aasm column: :status do
     state :placed, initial: true
     state :canceled
@@ -36,4 +40,9 @@ class Order < ApplicationRecord
     end
   end
 
+  private
+
+  def calculate_total
+    self.total = order_items.map(&:subtotal).inject(:+)
+  end
 end

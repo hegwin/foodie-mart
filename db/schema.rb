@@ -10,12 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_020005) do
+ActiveRecord::Schema.define(version: 2021_03_23_023428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
   enable_extension "plpgsql"
+
+  create_table "audits", force: :cascade do |t|
+    t.integer "auditable_id"
+    t.string "auditable_type"
+    t.integer "associated_id"
+    t.string "associated_type"
+    t.integer "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.jsonb "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
+    t.datetime "created_at"
+    t.index ["associated_type", "associated_id"], name: "associated_index"
+    t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
+  end
 
   create_table "meals", force: :cascade do |t|
     t.string "name"
@@ -29,6 +51,16 @@ ActiveRecord::Schema.define(version: 2021_03_23_020005) do
     t.index ["name", "restaurant_id"], name: "index_meals_on_name_and_restaurant_id"
     t.index ["name"], name: "index_meals_on_name"
     t.index ["restaurant_id"], name: "index_meals_on_restaurant_id"
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.integer "order_id"
+    t.integer "meal_id"
+    t.jsonb "meal_snapshot"
+    t.integer "amount"
+    t.decimal "subtotal", precision: 8, scale: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "orders", force: :cascade do |t|

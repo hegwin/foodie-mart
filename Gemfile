@@ -22,6 +22,7 @@ gem 'turbolinks', '~> 5'
 # gem 'image_processing', '~> 1.2'
 
 gem 'aasm'
+gem "audited", "~> 4.9"
 gem 'bcrypt', '~> 3.1.7'
 gem 'jbuilder', '~> 2.7'
 gem 'jwt'
@@ -52,6 +53,7 @@ group :test do
   gem 'capybara', '>= 3.26'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
+  gem 'simplecov', require: false
   gem 'webdrivers'
 end
 
