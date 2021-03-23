@@ -3,6 +3,9 @@ class Order < ApplicationRecord
 
   belongs_to :user
   belongs_to :restaurant
+  has_many :order_items
+
+  accepts_nested_attributes_for :order_items
 
   aasm column: :status do
     state :placed, initial: true
@@ -32,4 +35,5 @@ class Order < ApplicationRecord
       transitions from: :delivered, to: :received
     end
   end
+
 end
