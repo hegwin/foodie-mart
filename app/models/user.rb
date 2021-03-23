@@ -3,4 +3,6 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :restaurants
+
+  validates :email, presence: true
 end

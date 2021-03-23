@@ -2,6 +2,8 @@ class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :meal
 
+  validates :amount, presence: true, numericality: { greater_than: 0, only_integer: true }
+
   after_validation :calculate_subtotal, on: :create
   after_validation :snapshoot_meal, on: :create
 
