@@ -16,6 +16,7 @@ gem 'jwt'
 gem 'puma', '~> 5.0'
 gem 'pundit'
 gem 'rack-cors'
+gem 'rolify'
 
 gem 'sass-rails', '>= 6'
 gem 'turbolinks', '~> 5'
