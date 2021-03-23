@@ -13,5 +13,7 @@ FactoryBot.define do
 
     association :restaurant
     association :user
+
+    order_items { [association(:order_item)] }
   end
 end

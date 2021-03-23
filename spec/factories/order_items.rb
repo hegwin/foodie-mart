@@ -4,7 +4,6 @@ FactoryBot.define do
     amount { 1 }
     subtotal { '9.99' }
 
-    association :order
     association :meal
   end
 end

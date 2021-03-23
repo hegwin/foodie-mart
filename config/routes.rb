@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :restaurants, only: :index
       resources :sessions, only: :create
-      resources :orders, only: :index
+      resources :orders, only: %i[index show]
     end
   end
 end

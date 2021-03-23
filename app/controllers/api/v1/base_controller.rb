@@ -1,5 +1,8 @@
 class Api::V1::BaseController < ActionController::API
   include ActionController::HttpAuthentication::Token
+  include Pundit
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 
@@ -14,5 +17,9 @@ class Api::V1::BaseController < ActionController::API
 
   def current_user
     @current_user
+  end
+
+  def user_not_authorized
+    head :forbidden
   end
 end
