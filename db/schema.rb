@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_22_131704) do
+ActiveRecord::Schema.define(version: 2021_03_23_014117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2021_03_22_131704) do
     t.string "name"
     t.text "description"
     t.decimal "price", precision: 8, scale: 2
-    t.string "image", default: "https://picsum.photos/id/312/200/200"
+    t.string "image_url", default: "https://picsum.photos/id/312/200/200"
     t.boolean "online", default: true
     t.integer "restaurant_id"
     t.datetime "created_at", precision: 6, null: false
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2021_03_22_131704) do
     t.float "latitude", default: 31.229818664563933
     t.float "longitude", default: 121.4567612447622
     t.integer "user_id"
+    t.string "image_url", default: -> { "concat('https://picsum.photos/id/', (floor((random() * (100)::double precision)))::integer, '/300/300')" }
     t.index "ll_to_earth(latitude, longitude)", name: "index_restaurants_on_coord"
     t.index ["online"], name: "index_restaurants_on_online"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
