@@ -5,5 +5,7 @@ FactoryBot.define do
     online      { true }
     latitude    { Faker::Address.latitude }
     longitude   { Faker::Address.longitude }
+
+    association :user
   end
 end

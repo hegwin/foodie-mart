@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_014117) do
+ActiveRecord::Schema.define(version: 2021_03_23_020005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 2021_03_23_014117) do
     t.index ["name", "restaurant_id"], name: "index_meals_on_name_and_restaurant_id"
     t.index ["name"], name: "index_meals_on_name"
     t.index ["restaurant_id"], name: "index_meals_on_restaurant_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer "restaurant_id"
+    t.integer "user_id"
+    t.string "status"
+    t.decimal "total", precision: 8, scale: 2
+    t.jsonb "shipping_info"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "restaurants", force: :cascade do |t|
