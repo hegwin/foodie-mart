@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   #
   namespace :api do
     namespace :v1 do
-      resources :restaurants, only: :index
+      resources :restaurants, only: %i[index create update] do
+        collection { get :my }
+      end
       resources :sessions, only: :create
       resources :orders, only: %i[index show]
     end
