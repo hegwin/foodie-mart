@@ -4,6 +4,7 @@ class Api::V1::BaseController < ActionController::API
 
   attr_reader :current_user
 
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
@@ -19,5 +20,9 @@ class Api::V1::BaseController < ActionController::API
 
   def user_not_authorized
     head :forbidden
+  end
+
+  def parameter_missing(e)
+    render json: { errors: e.message }, status: 422
   end
 end
