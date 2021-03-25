@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :restaurants, only: %i[index create update] do
         collection { get :my }
       end
+      resources :meals, only: %i[index create update show]
       resources :sessions, only: :create
       resources :orders, only: %i[index show]
       resources :users, only: %i[create update] do

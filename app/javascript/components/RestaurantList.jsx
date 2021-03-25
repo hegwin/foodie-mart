@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 
 const url = '/api/v1/restaurants'
