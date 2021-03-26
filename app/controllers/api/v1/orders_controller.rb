@@ -6,6 +6,8 @@ class Api::V1::OrdersController < Api::V1::BaseController
 
   def index
     @orders = OrderPolicy::Scope.new(current_user, Order, params.permit(:restaurant_id)).resolve.includes(:user, :restaurant).order(created_at: :desc)
+
+    @orders = @orders.where(status: params[:status_eq]) if params[:status_eq].present?
   end
 
   def create

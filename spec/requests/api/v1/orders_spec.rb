@@ -9,6 +9,8 @@ RSpec.describe 'Api::V1::Orders', type: :request do
   let(:token_for_restaurant_owner) { AuthnService.generate_token(restaurant_owner.id) }
   let(:headers_for_owner) {{ Authorization: "Bearer #{token_for_restaurant_owner}" }}
 
+  let(:restaurant) { create :restaurant, user: restaurant_owner }
+
   describe '#auth_jwt' do
     it 'requires current user' do
       get '/api/v1/orders', headers: { Authorization: "Bearer #{token}" }
@@ -60,13 +62,16 @@ RSpec.describe 'Api::V1::Orders', type: :request do
     end
 
     context 'as a restaurant order' do
-      let!(:my_restaurant) { create :restaurant, user: restaurant_owner }
       let!(:other_restaurant) { create :restaurant }
-      let!(:my_orders) { create_list :order, 3, restaurant: my_restaurant }
       let!(:other_orders) { create_list :order, 2, restaurant: other_restaurant }
 
+      before do
+        create_list :order, 2, restaurant: restaurant, status: 'placed'
+        create :order, restaurant: restaurant, status: 'canceled'
+      end
+
       it 'only lists orders belong to my restaurant' do
-        get "/api/v1/orders?restaurant_id=#{my_restaurant.id}", headers: headers_for_owner
+        get "/api/v1/orders?restaurant_id=#{restaurant.id}", headers: headers_for_owner
         expect(response).to have_http_status(200)
         expect(json.count).to eq(3)
       end
@@ -74,6 +79,13 @@ RSpec.describe 'Api::V1::Orders', type: :request do
       it 'denies when I try to see orders belong to another restaurant' do
         get "/api/v1/orders?restaurant_id=#{other_restaurant.id}", headers: headers_for_owner
         expect(response).to have_http_status(403)
+      end
+
+      it 'filter by status' do
+        get "/api/v1/orders?restaurant_id=#{restaurant.id}&status_eq=placed", headers: headers_for_owner
+
+        expect(response).to have_http_status(200)
+        expect(json.count).to eq(2)
       end
     end
   end
@@ -128,7 +140,6 @@ RSpec.describe 'Api::V1::Orders', type: :request do
   end
 
   describe 'GET /api/v1/orders/:id' do
-    let!(:restaurant) { create :restaurant, user: restaurant_owner }
     let!(:order) { create :order, user: user, restaurant: restaurant }
 
     context 'as a regular user' do
@@ -147,6 +158,69 @@ RSpec.describe 'Api::V1::Orders', type: :request do
         expect(response).to have_http_status(200)
         expect(json.keys).to include('id', 'status', 'total', 'user', 'shipping_info', 'order_items')
       end
+    end
+  end
+
+  describe 'POST /api/v1/orders/:id/cancel' do
+    let!(:order) { create :order, user: user }
+
+    it 'returns my canceled order' do
+      post "/api/v1/orders/#{order.id}/cancel", headers: headers_for_user
+
+      expect(response).to have_http_status(200)
+      expect(json['status']).to eq 'canceled'
+    end
+
+    it 'cannot cancel a processing order' do
+      order.confirm!
+
+      post "/api/v1/orders/#{order.id}/cancel", headers: headers_for_user
+
+      expect(response).to have_http_status(403)
+    end
+  end
+
+  describe 'POST /api/v1/orders/:id/confirm' do
+    let!(:order) { create :order, restaurant: restaurant }
+
+    it 'marks an order belong to my restaurant to processing' do
+      post "/api/v1/orders/#{order.id}/confirm", headers: headers_for_owner
+
+      expect(response).to have_http_status(200)
+      expect(json['status']).to eq 'processing'
+    end
+  end
+
+  describe 'POST /api/v1/orders/:id/send_out' do
+    let!(:order) { create :order, restaurant: restaurant, status: 'processing' }
+
+    it 'marks an order belong to my restaurant to in_route' do
+      post "/api/v1/orders/#{order.id}/send_out", headers: headers_for_owner
+
+      expect(response).to have_http_status(200)
+      expect(json['status']).to eq 'in_route'
+    end
+  end
+
+  describe 'POST /api/v1/orders/:id/deliver' do
+    let!(:order) { create :order, restaurant: restaurant, status: 'in_route' }
+
+    it 'marks an order belong to my restaurant to delivered' do
+      post "/api/v1/orders/#{order.id}/deliver", headers: headers_for_owner
+
+      expect(response).to have_http_status(200)
+      expect(json['status']).to eq 'delivered'
+    end
+  end
+
+  describe 'POST /api/v1/orders/:id/confirm_receipt' do
+    let!(:order) { create :order, user: user, status: 'delivered' }
+
+    it 'marks my order to received' do
+      post "/api/v1/orders/#{order.id}/confirm_receipt", headers: headers_for_user
+
+      expect(response).to have_http_status(200)
+      expect(json['status']).to eq 'received'
     end
   end
 end

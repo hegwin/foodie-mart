@@ -37,4 +37,16 @@ class OrderPolicy < ApplicationPolicy
   def confirm?
     user.restaurants.pluck(:id).include? record.restaurant_id
   end
+
+  def send_out?
+    confirm?
+  end
+
+  def deliver?
+    confirm?
+  end
+
+  def confirm_receipt?
+    cancel?
+  end
 end
