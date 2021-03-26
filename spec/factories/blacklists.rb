@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :blacklist do
-    restaurant_owner_id { 1 }
-    user_id { 1 }
+    association :user
+    association :restaurant_owner
   end
 end
