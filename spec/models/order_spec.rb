@@ -11,6 +11,9 @@ RSpec.describe Order, type: :model do
       {
         user_id: user.id,
         restaurant_id: restaurant.id,
+        shipping_info: {
+          line1: '638 Huangpin S.'
+        },
         order_items_attributes: [
           {
             meal_id: meal1.id,

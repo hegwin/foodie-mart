@@ -6,6 +6,8 @@ class Order < ApplicationRecord
   has_many :order_items
 
   validates :order_items, length: { minimum: 1 }
+  validates :shipping_info, presence: true, on: :create
+  validate :order_items_belong_to_one_restaurant, on: :create
 
   before_create :calculate_total
 
@@ -29,7 +31,7 @@ class Order < ApplicationRecord
       transitions from: :placed, to: :processing
     end
 
-    event :dispatch do
+    event :send_out do
       transitions from: :processing, to: :in_route
     end
 
@@ -46,5 +48,9 @@ class Order < ApplicationRecord
 
   def calculate_total
     self.total = order_items.map(&:subtotal).inject(:+)
+  end
+
+  def order_items_belong_to_one_restaurant
+    errors.add(:order_items, 'must belong to one restaurant') unless order_items.map.map { |item| item.meal.restaurant_id }.uniq == [restaurant.id]
   end
 end

@@ -9,7 +9,11 @@ Rails.application.routes.draw do
       end
       resources :meals, only: %i[index create update show]
       resources :sessions, only: :create
-      resources :orders, only: %i[index show]
+      resources :orders, only: %i[index show create] do
+        member do
+          post *Order.aasm.events.map(&:name)
+        end
+      end
       resources :users, only: %i[create update] do
         collection { get :me }
       end
