@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Restaurants', type: :request do
   let(:owner) { create :user, :restaurant_owner }
   let(:token) { AuthnService.generate_token(owner.id) }
-  let(:headers_for_owner) {{ Authorization: "Bearer #{token}" }}
-
+  let(:headers_for_owner) { { Authorization: "Bearer #{token}" } }
 
   describe 'GET /api/v1/restaurants' do
     before do
@@ -49,12 +48,10 @@ RSpec.describe 'Api::V1::Restaurants', type: :request do
         name: 'Habit',
         description: 'Hamburgers'
       }
-
     end
 
     it 'creates a restaurant' do
       expect { post '/api/v1/restaurants', params: params, headers: headers_for_owner }.to change { Restaurant.count }.by(1)
-
     end
 
     it 'creates a restaurant for current user' do

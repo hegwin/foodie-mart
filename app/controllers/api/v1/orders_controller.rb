@@ -13,6 +13,8 @@ class Api::V1::OrdersController < Api::V1::BaseController
   def create
     @order = Order.new create_order_params
 
+    authorize @order
+
     if @order.save
       render :show, status: :created
     else
@@ -36,8 +38,7 @@ class Api::V1::OrdersController < Api::V1::BaseController
   def create_order_params
     params.require(:order_items_attributes)
 
-    params.permit(:restaurant_id, shipping_info: %i[line1 line2 zip_code phone] , order_items_attributes: %i[meal_id amount]).merge(user_id: current_user.id)
-
+    params.permit(:restaurant_id, shipping_info: %i[line1 line2 zip_code phone], order_items_attributes: %i[meal_id amount]).merge(user_id: current_user.id)
   end
 
   def load_order

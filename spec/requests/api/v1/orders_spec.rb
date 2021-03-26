@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Orders', type: :request do
   let!(:user) { create :user }
   let(:token) { AuthnService.generate_token(user.id) }
-  let(:headers_for_user) {{ Authorization: "Bearer #{token}" }}
+  let(:headers_for_user) { { Authorization: "Bearer #{token}" } }
 
   let(:restaurant_owner) { create :user, :restaurant_owner }
   let(:token_for_restaurant_owner) { AuthnService.generate_token(restaurant_owner.id) }
-  let(:headers_for_owner) {{ Authorization: "Bearer #{token_for_restaurant_owner}" }}
+  let(:headers_for_owner) { { Authorization: "Bearer #{token_for_restaurant_owner}" } }
 
   let(:restaurant) { create :restaurant, user: restaurant_owner }
 
@@ -136,6 +136,14 @@ RSpec.describe 'Api::V1::Orders', type: :request do
       post '/api/v1/orders', params: invalid_params, headers: headers_for_user
 
       expect(response).to have_http_status(422)
+    end
+
+    it 'returns 403 when I am in the blacklists' do
+      create :blacklist, user: user, restaurant_owner: restaurant.user
+
+      post '/api/v1/orders', params: valid_params, headers: headers_for_user
+
+      expect(response).to have_http_status(403)
     end
   end
 

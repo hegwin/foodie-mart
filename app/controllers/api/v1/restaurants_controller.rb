@@ -4,9 +4,7 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
   def index
     @restaurants = Restaurant.all
 
-    if params[:latitude].present? && params[:longitude].present?
-      @restaurants = @restaurants.near(params[:latitude], params[:longitude])
-    end
+    @restaurants = @restaurants.near(params[:latitude], params[:longitude]) if params[:latitude].present? && params[:longitude].present?
   end
 
   def my

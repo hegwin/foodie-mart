@@ -68,8 +68,8 @@ RSpec.describe 'Api::V1::Users', type: :request do
   describe 'PATCH /api/v1/users/:id' do
     let!(:user) { create :user }
     let(:token) { AuthnService.generate_token(user.id) }
-    let(:headers_for_user) {{ Authorization: "Bearer #{token}"}}
-    let(:params) {{ first_name: 'New' }}
+    let(:headers_for_user) { { Authorization: "Bearer #{token}" } }
+    let(:params) { { first_name: 'New' } }
 
     it 'updates user info' do
       patch "/api/v1/users/#{user.id}", params: params, headers: headers_for_user
@@ -87,7 +87,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
   describe 'GET /api/v1/users/me' do
     let!(:user) { create :user, first_name: 'Hegwin', last_name: 'Xiao' }
     let(:token) { AuthnService.generate_token(user.id) }
-    let(:headers_for_user) {{ Authorization: "Bearer #{token}"}}
+    let(:headers_for_user) { { Authorization: "Bearer #{token}" } }
 
     it 'returns my info' do
       get '/api/v1/users/me', headers: headers_for_user

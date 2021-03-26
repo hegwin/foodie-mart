@@ -65,9 +65,9 @@ Style/FrozenStringLiteralComment:
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
-    default: ()
-    "%i": []
-    "%w": []
+    default: []
+    "%i": '[]'
+    "%w": '[]'
 
 Style/RescueStandardError:
   Exclude:

@@ -6,7 +6,7 @@ RSpec.describe 'Api::V1::Meals', type: :request do
   let(:another_restaurant) { create :restaurant }
 
   let(:token) { AuthnService.generate_token(user.id) }
-  let(:headers) {{ Authorization: "Bearer #{token}" }}
+  let(:headers) { { Authorization: "Bearer #{token}" } }
 
   describe 'GET /api/v1/meals' do
     before do

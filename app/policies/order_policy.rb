@@ -22,7 +22,7 @@ class OrderPolicy < ApplicationPolicy
   end
 
   def create?
-    user.is_regular?
+    user.is_regular? && !Blacklist.exists?(user: user, restaurant_owner: record.restaurant.user)
   end
 
   def show?

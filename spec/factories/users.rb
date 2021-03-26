@@ -8,7 +8,6 @@ FactoryBot.define do
     password   { 'password' }
     password_confirmation { 'password' }
 
-
     trait :restaurant_owner do
       role_name { 'restaurant_owner' }
     end

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Blacklists', type: :request do
   let(:restaurant_owner) { create :user, :restaurant_owner }
   let(:token) { AuthnService.generate_token(restaurant_owner.id) }
-  let(:headers_for_owner) {{ Authorization: "Bearer #{token}" }}
+  let(:headers_for_owner) { { Authorization: "Bearer #{token}" } }
 
   describe 'GET /api/v1/blacklists' do
     before do

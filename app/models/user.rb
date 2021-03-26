@@ -16,6 +16,6 @@ class User < ApplicationRecord
   private
 
   def assign_role
-    self.add_role role_name.to_sym
+    add_role role_name.to_sym
   end
 end

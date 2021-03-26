@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       resources :sessions, only: :create
       resources :orders, only: %i[index show create] do
         member do
-          post *Order.aasm.events.map(&:name)
+          post(*Order.aasm.events.map(&:name))
         end
       end
       resources :users, only: %i[create update] do
