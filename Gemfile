@@ -31,6 +31,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'pry-rails'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -44,7 +45,6 @@ end
 
 group :test do
   gem 'capybara', '>= 3.26'
-  gem 'rspec-rails'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
   gem 'webdrivers'
