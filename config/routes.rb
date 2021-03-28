@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   #
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :restaurants, only: %i[index create update] do
+      resources :restaurants, only: %i[index show create update] do
         collection { get :my }
       end
       resources :meals, only: %i[index create update show]
@@ -20,4 +20,6 @@ Rails.application.routes.draw do
       resources :blacklists, only: %i[create index destroy]
     end
   end
+
+  get '*path', to: 'hegwin#index'
 end
