@@ -20,11 +20,21 @@ RSpec.describe 'Api::V1::Restaurants', type: :request do
 
       it 'sorts by distance' do
         get '/api/v1/restaurants?latitude=30&longitude=120'
-        expect(response).to have_http_status(200)
 
-        result = JSON.parse(response.body)
-        expect(result.first['id']).to eq(nearest_restaurant.id)
+        expect(response).to have_http_status(200)
+        expect(json.first['id']).to eq(nearest_restaurant.id)
       end
+    end
+  end
+
+  describe 'GET /api/v1/restaurants/:id' do
+    let!(:restaurant) { create :restaurant }
+
+    it 'returns restaurant info' do
+      get "/api/v1/restaurants/#{restaurant.id}"
+
+      expect(response).to have_http_status(200)
+      expect(json.keys).to include('name', 'description', 'image_url')
     end
   end
 

@@ -1,10 +1,16 @@
 class Api::V1::RestaurantsController < Api::V1::BaseController
-  before_action :auth_jwt, except: :index
+  before_action :auth_jwt, except: %i[index show]
 
   def index
     @restaurants = Restaurant.all
 
     @restaurants = @restaurants.near(params[:latitude], params[:longitude]) if params[:latitude].present? && params[:longitude].present?
+  end
+
+  def show
+    restaurant = Restaurant.find(params[:id])
+
+    render json: restaurant, status: 200
   end
 
   def my
