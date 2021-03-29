@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Container from '@material-ui/core/Container'
 import NavBar from './NavBar'
+import Copyright from './Copyright'
 
 class AppLayout extends Component {
   render() {
@@ -11,6 +12,7 @@ class AppLayout extends Component {
         <div className='App'>
           {this.props.children}
         </div>
+        <Copyright />
       </Container>
     )
   }
