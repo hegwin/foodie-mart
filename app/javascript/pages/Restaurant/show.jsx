@@ -8,13 +8,13 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
-
 import IconButton from '@material-ui/core/IconButton';
 import AddButton from '@material-ui/icons/AddCircle';
 import RemoveButton from '@material-ui/icons/RemoveCircle'
 
 import { formatPrice } from '../../utils/formatter'
 
+import MealItem from '../../components/MealItem'
 
 const styles = theme => ({
   restaurantHeader: {
@@ -83,23 +83,7 @@ class Restaurant extends Component {
             meals.map(meal => {
               return(
                 <Grid item key={meal.id} xs={12} md={6} lg={4}>
-                  <Card>
-                    <CardMedia style={{height: 100}} image={meal.image_url} />
-                    <CardContent>
-                      <Typography component='h2' variant='h6'>{meal.name}</Typography>
-                      <Typography variant='body1'>{meal.description}</Typography>
-                      <Typography variant='body1' color='primary' style={{marginTop: 16}}>{formatPrice(meal.price)}</Typography>
-                    </CardContent>
-                    <CardActions style={{justifyContent: 'flex-end', marginTop: -60}}>
-                      <IconButton>
-                        <RemoveButton color='primary' />
-                      </IconButton>
-                      <span>{1}</span>
-                      <IconButton>
-                        <AddButton color='primary' />
-                      </IconButton>
-                    </CardActions>
-                  </Card>
+                  <MealItem {...meal} />
                 </Grid>
               )
             })

@@ -8,6 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Typography from '@material-ui/core/Typography'
 
+import { CartConsumer } from '../utils/cartContext';
+
 class NavBar extends Component {
   render() {
     return(
@@ -19,9 +21,15 @@ class NavBar extends Component {
           <Typography component='h1' variant='h6' style={{flexGrow: 1}}>Hegwin's Foodie</Typography>
 
           <IconButton color='inherit' edge='end'>
-            <Badge badgeContent={3} color="secondary">
-              <ShoppingCartIcon />
-            </Badge>
+            <CartConsumer>
+              { ({numInCart}) => {
+                return (
+                  <Badge badgeContent={numInCart} color="secondary">
+                    <ShoppingCartIcon />
+                  </Badge>
+                )
+              }}
+            </CartConsumer>
           </IconButton>
         </ToolBar>
       </AppBar>
