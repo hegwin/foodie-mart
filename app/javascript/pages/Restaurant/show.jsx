@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddButton from '@material-ui/icons/AddCircle';
 import RemoveButton from '@material-ui/icons/RemoveCircle'
 
+import { formatPrice } from '../../utils/formatter'
 
 
 const styles = theme => ({
@@ -87,7 +88,7 @@ class Restaurant extends Component {
                     <CardContent>
                       <Typography component='h2' variant='h6'>{meal.name}</Typography>
                       <Typography variant='body1'>{meal.description}</Typography>
-                      <Typography variant='body1' color='primary' style={{marginTop: 16}}>{this.formatPrice(meal.price)}</Typography>
+                      <Typography variant='body1' color='primary' style={{marginTop: 16}}>{formatPrice(meal.price)}</Typography>
                     </CardContent>
                     <CardActions style={{justifyContent: 'flex-end', marginTop: -60}}>
                       <IconButton>
@@ -106,12 +107,6 @@ class Restaurant extends Component {
         </Grid>
       </div>
     )
-  }
-
-  formatPrice(priceString) {
-    const price = Number(priceString);
-
-    return(new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(price))
   }
 }
 

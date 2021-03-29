@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 
+import { formatDistance } from '../utils/formatter'
+
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -35,7 +37,7 @@ class RestaurantItem extends Component {
         <CardContent>
           <Typography component='h2' variant='h6'>{name}</Typography>
           <Typography variant='body1'>{description}</Typography>
-          <Typography variant='body2' className={classes.distance}>{this.formatDistance(distance)}</Typography>
+          <Typography variant='body2' className={classes.distance}>{formatDistance(distance)}</Typography>
         </CardContent>
       </Card>
     )
@@ -44,22 +46,6 @@ class RestaurantItem extends Component {
   showRestaurant() {
     const { id, name, description, image_url, distance } = this.props
     this.props.history.push({pathname: `/restaurants/${id}`, state: {name, description, image_url, distance}})
-  }
-
-  formatDistance(dist) {
-    const distance = Number(dist);
-
-    if (distance == -1) {
-      return null
-    } else if (distance < 300) {
-      return '< 300 m'
-    } else if (distance >= 300 && distance < 1000) {
-      return(new Intl.NumberFormat('en-GB',  { style: 'unit', maximumSignificantDigits: 2,  unit: 'meter' }).format(distance))
-    } else if (distance >= 1000 && distance < 20000) {
-      return(new Intl.NumberFormat('en-GB',  { style: 'unit', maximumSignificantDigits: 3,  unit: 'kilometer' }).format(distance / 1000))
-    } else if (distance >= 20000) {
-      return '> 20 km'
-    }
   }
 }
 
