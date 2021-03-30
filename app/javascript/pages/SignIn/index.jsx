@@ -15,6 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import ErrorMessages from '../../components/ErrorMessages'
+
 const styles = theme => ({
   paper: {
     marginTop: theme.spacing(10),
@@ -36,8 +38,52 @@ const styles = theme => ({
 })
 
 class SignIn extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      data: { email: '', password: '' },
+      errors: {}
+    }
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleChange(e) {
+    const target = e.target
+    const { name, value } = target
+
+    this.setState({
+      data: { ...this.state.data, [name]: value }
+    })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+
+    const url = `/api/v1/sessions`
+
+    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(this.state.data) })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else if (response.status === 401) {
+          this.setState({ errors: { 'email/password': ['not match'] } })
+
+          throw new Error('Data invalid.')
+        }
+        throw new Error('Request failed.')
+      })
+      .then(response => {
+        localStorage.setItem('TOKEN', response.token)
+        this.props.history.replace('/')
+      })
+  }
+
   render() {
     const { classes } = this.props
+    const { errors } = this.state
 
     return (
       <Container component="main" maxWidth="xs">
@@ -47,9 +93,10 @@ class SignIn extends Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">Sign in</Typography>
-          <form className={classes.form} noValidate>
-            <TextField variant="outlined" margin="normal" autoFocus required fullWidth id="email" label="Email Address" name="email" autoComplete="email"/>
-            <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password"/>
+          <ErrorMessages errors={errors} />
+          <form className={classes.form} onSubmit={this.handleSubmit}>
+            <TextField variant="outlined" margin="normal" autoFocus required fullWidth id="email" label="Email Address" name="email" autoComplete="email" onChange={this.handleChange}/>
+            <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={this.handleChange} />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"

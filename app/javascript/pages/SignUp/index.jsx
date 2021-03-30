@@ -15,6 +15,8 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
+import ErrorMessages from '../../components/ErrorMessages'
+
 const styles = theme => ({
   paper: {
     marginTop: theme.spacing(10),
@@ -35,9 +37,77 @@ const styles = theme => ({
   },
 })
 
+const DEFAULT_ROLE = 'regular'
+
 class SignUp extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      data: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        role_name: DEFAULT_ROLE
+      },
+      errors: {}
+    }
+
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleCheck  = this.handleCheck.bind(this)
+  }
+
+  handleChange(e) {
+    const target = e.target
+    const { name, value } = target
+
+    this.setState({
+      data: { ...this.state.data, [name]: value }
+    })
+  }
+
+  handleCheck(e) {
+    const target = e.target
+    const { name, checked } = target
+
+    if (checked) {
+      this.setState({ data: { ...this.state.data, role_name: name }})
+    } else {
+      this.setState({ data: { ...this.state.data, role_name: DEFAULT_ROLE }})
+    }
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+
+    const url = `/api/v1/users`
+
+    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(this.state.data) })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else if (response.status === 422) {
+          response.json().then(data => {
+            let errors = data.errors
+            this.setState({ errors })
+
+            throw new Error('Data invalid.')
+          })
+        }
+        throw new Error('Request failed.')
+      })
+      .then(response => {
+        localStorage.setItem('TOKEN', response.token)
+        this.props.history.replace('/')
+      })
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props
+    const { errors } = this.state
 
     return (
       <Container component="main" maxWidth="xs">
@@ -47,18 +117,20 @@ class SignUp extends Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">Sign up</Typography>
-          <form className={classes.form} noValidate>
+          <ErrorMessages errors={errors} />
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="fname"
-                  name="firstName"
+                  name="first_name"
                   variant="outlined"
                   required
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={this.handleChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -68,8 +140,9 @@ class SignUp extends Component {
                   fullWidth
                   id="lastName"
                   label="Last Name"
-                  name="lastName"
+                  name="last_name"
                   autoComplete="lname"
+                  onChange={this.handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -81,6 +154,7 @@ class SignUp extends Component {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={this.handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -92,12 +166,24 @@ class SignUp extends Component {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="current-password"
+                  onChange={this.handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password_confirmation"
+                  label="Password Confirmation"
+                  type="password"
+                  id="passwordConfirmation"
+                  onChange={this.handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox name="restaurant_owner" value="allowExtraEmails" color="primary" onChange={this.handleCheck} />}
                   label="I am a restaurant owner."
                 />
               </Grid>
