@@ -10,23 +10,50 @@ class AppLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      numInCart: 0
+      cart: {}
     }
 
-    this.updateCartState = this.updateCartState.bind(this);
-
+    this.addToCart = this.addToCart.bind(this)
+    this.removeFromCart = this.removeFromCart.bind(this)
+    this.clearCart = this.clearCart.bind(this)
   }
 
-  updateCartState(state) {
-    this.setState({
-      numInCart: this.state.numInCart + 1,
-    })
+  addToCart(mealId, mealInfo) {
+    let cart = this.state.cart
+
+    if (cart[mealId] === undefined) {
+      cart[mealId] = { ...mealInfo, amount: 1 }
+    } else {
+      cart[mealId].amount ++
+    }
+
+    this.setState({ cart })
+  }
+
+  removeFromCart(mealId) {
+    let cart = this.state.cart
+
+    if (cart[mealId]) {
+      cart[mealId].amount --
+
+      if (cart[mealId].amount === 0) {
+        console.log('remove all')
+        delete cart[mealId]
+      }
+
+      this.setState({ cart })
+    }
+  }
+
+  clearCart() {
+    console.log('cart clear')
+    this.setState({ cart: {} })
   }
 
   render() {
     return(
       <Container maxWidth="lg">
-        <CartProvider value={{ numInCart: this.state.numInCart, updateCartState: this.updateCartState }}>
+        <CartProvider value={{ cart: this.state.cart, addToCart: this.addToCart, removeFromCart: this.removeFromCart, clearCart: this.clearCart }}>
           <NavBar />
           <div className='App'>
             {this.props.children}

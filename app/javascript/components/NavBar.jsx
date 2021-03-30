@@ -22,9 +22,9 @@ class NavBar extends Component {
 
           <IconButton color='inherit' edge='end'>
             <CartConsumer>
-              { ({numInCart}) => {
+              { ({cart}) => {
                 return (
-                  <Badge badgeContent={numInCart} color="secondary">
+                  <Badge badgeContent={this.numInCart(cart)} color="secondary">
                     <ShoppingCartIcon />
                   </Badge>
                 )
@@ -34,6 +34,16 @@ class NavBar extends Component {
         </ToolBar>
       </AppBar>
     )
+  }
+
+  numInCart(cart) {
+    let totalAmount = 0
+
+    for (let mealId in cart) {
+      totalAmount += cart[mealId].amount
+    }
+
+    return totalAmount
   }
 }
 
