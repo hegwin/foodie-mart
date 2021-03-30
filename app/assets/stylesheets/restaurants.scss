@@ -10,3 +10,12 @@
 .App {
   margin-top: 4.5em;
 }
+
+#menu-appbar {
+  a {
+    color: black;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

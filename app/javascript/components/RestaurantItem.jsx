@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography'
 import { CartConsumer } from '../utils/cartContext';
 import { formatDistance } from '../utils/formatter'
 
-
 const styles = theme => ({
   root: {
     display: 'flex',

@@ -16,6 +16,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import ErrorMessages from '../../components/ErrorMessages'
+import { SessionConsumer } from '../../utils/sessionContext'
 
 const styles = theme => ({
   paper: {
@@ -59,7 +60,7 @@ class SignIn extends Component {
     })
   }
 
-  handleSubmit(e) {
+  handleSubmit(e, refreshCurrentUser) {
     e.preventDefault()
 
     const url = `/api/v1/sessions`
@@ -76,7 +77,9 @@ class SignIn extends Component {
         throw new Error('Request failed.')
       })
       .then(response => {
-        localStorage.setItem('TOKEN', response.token)
+        const { token } = response
+        localStorage.setItem('TOKEN', token)
+        refreshCurrentUser()
         this.props.history.replace('/')
       })
   }
@@ -94,27 +97,35 @@ class SignIn extends Component {
           </Avatar>
           <Typography component="h1" variant="h5">Sign in</Typography>
           <ErrorMessages errors={errors} />
-          <form className={classes.form} onSubmit={this.handleSubmit}>
-            <TextField variant="outlined" margin="normal" autoFocus required fullWidth id="email" label="Email Address" name="email" autoComplete="email" onChange={this.handleChange}/>
-            <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={this.handleChange} />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>Sign In</Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link component={RouterLink} to="/sign_up" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+          <SessionConsumer>
+          {
+            ({refreshCurrentUser}) => {
+              return (
+                <form className={classes.form} onSubmit={ (e) => { this.handleSubmit(e, refreshCurrentUser) } }>
+                  <TextField variant="outlined" margin="normal" autoFocus required fullWidth id="email" label="Email Address" name="email" autoComplete="email" onChange={this.handleChange}/>
+                  <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={this.handleChange} />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>Sign In</Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link component={RouterLink} to="/sign_up" variant="body2">
+                      Don't have an account? Sign Up
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
+            )
+          }
+        }
+        </SessionConsumer>
       </div>
     </Container>
     )

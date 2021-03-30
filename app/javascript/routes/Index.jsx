@@ -9,8 +9,8 @@ import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 
 export default (
-  <AppLayout>
-    <Router>
+  <Router>
+    <AppLayout>
       <Switch>
         <Route path="/restaurants" exact component={RestaurantList} />
         <Route path="/restaurants/:id" component={Restaurant} />
@@ -18,6 +18,6 @@ export default (
         <Route path="/sign_up" component={SignUp} />
         <Redirect to="/restaurants" />
       </Switch>
-    </Router>
-  </AppLayout>
+    </AppLayout>
+  </Router>
 )

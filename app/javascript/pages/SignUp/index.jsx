@@ -16,6 +16,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
 import ErrorMessages from '../../components/ErrorMessages'
+import { SessionConsumer } from '../../utils/sessionContext'
 
 const styles = theme => ({
   paper: {
@@ -80,7 +81,7 @@ class SignUp extends Component {
     }
   }
 
-  handleSubmit(e) {
+  handleSubmit(e, refreshCurrentUser) {
     e.preventDefault()
 
     const url = `/api/v1/users`
@@ -101,6 +102,7 @@ class SignUp extends Component {
       })
       .then(response => {
         localStorage.setItem('TOKEN', response.token)
+        refreshCurrentUser()
         this.props.history.replace('/')
       })
   }
@@ -118,95 +120,103 @@ class SignUp extends Component {
           </Avatar>
           <Typography component="h1" variant="h5">Sign up</Typography>
           <ErrorMessages errors={errors} />
-          <form className={classes.form} onSubmit={this.handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="first_name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="last_name"
-                  autoComplete="lname"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password_confirmation"
-                  label="Password Confirmation"
-                  type="password"
-                  id="passwordConfirmation"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox name="restaurant_owner" value="allowExtraEmails" color="primary" onChange={this.handleCheck} />}
-                  label="I am a restaurant owner."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Link component={RouterLink} to="/sign_in" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Container>
+          <SessionConsumer>
+            {
+              ({refreshCurrentUser}) => {
+                return (
+                  <form className={classes.form} onSubmit={ (e) => { this.handleSubmit(e, refreshCurrentUser)}}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                        autoComplete="fname"
+                        name="first_name"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="firstName"
+                        label="First Name"
+                        autoFocus
+                        onChange={this.handleChange}
+                      />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="lastName"
+                          label="Last Name"
+                          name="last_name"
+                          autoComplete="lname"
+                          onChange={this.handleChange}
+                        />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            onChange={this.handleChange}
+                          />
+                            </Grid>
+                            <Grid item xs={12}>
+                              <TextField
+                              variant="outlined"
+                              required
+                              fullWidth
+                              name="password"
+                              label="Password"
+                              type="password"
+                              id="password"
+                              onChange={this.handleChange}
+                            />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password_confirmation"
+                                label="Password Confirmation"
+                                type="password"
+                                id="passwordConfirmation"
+                                onChange={this.handleChange}
+                              />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <FormControlLabel
+                                  control={<Checkbox name="restaurant_owner" value="allowExtraEmails" color="primary" onChange={this.handleCheck} />}
+                                  label="I am a restaurant owner."
+                                />
+                                  </Grid>
+                                </Grid>
+                                <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                              >
+                                  Sign Up
+                              </Button>
+                              <Grid container justify="flex-end">
+                                <Grid item>
+                                  <Link component={RouterLink} to="/sign_in" variant="body2">
+                                    Already have an account? Sign in
+                                  </Link>
+                                </Grid>
+                              </Grid>
+                            </form>
+                )
+              }
+            }
+                          </SessionConsumer>
+                        </div>
+                      </Container>
     )
   }
 }
