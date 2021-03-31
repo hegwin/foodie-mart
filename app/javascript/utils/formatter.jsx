@@ -20,3 +20,9 @@ export function formatPrice(priceString) {
 
   return(new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(price))
 }
+
+export function formatDateTime(dateTimeString) {
+  const dateTime = new Date(dateTimeString)
+
+  return(new Intl.DateTimeFormat('en-GB', { dateStyle: 'short', timeStyle: 'short' }).format(dateTime))
+}

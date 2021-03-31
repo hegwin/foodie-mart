@@ -11,3 +11,7 @@ end
 json.order_items order.order_items do |item|
   json.extract! item, :id, :meal_id, :meal_snapshot, :amount, :subtotal
 end
+
+json.status_histories order.audits do |audit|
+  json.extract! audit, :version, :action, :audited_changes, :created_at
+end

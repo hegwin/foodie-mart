@@ -8,6 +8,7 @@ import Restaurant from '../pages/Restaurant/show'
 import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 import Cart from '../pages/Cart'
+import MyOrder from '../pages/MyOrder'
 
 export default (
   <Router>
@@ -18,6 +19,7 @@ export default (
         <Route path="/sign_in" component={SignIn} />
         <Route path="/sign_up" component={SignUp} />
         <Route path="/cart" component={Cart} />
+        <Route path="/orders" component={MyOrder} />
         <Redirect to="/restaurants" />
       </Switch>
     </AppLayout>
