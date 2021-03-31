@@ -7,6 +7,7 @@ import RestaurantList from '../pages/Restaurant'
 import Restaurant from '../pages/Restaurant/show'
 import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
+import Cart from '../pages/Cart'
 
 export default (
   <Router>
@@ -16,6 +17,7 @@ export default (
         <Route path="/restaurants/:id" component={Restaurant} />
         <Route path="/sign_in" component={SignIn} />
         <Route path="/sign_up" component={SignUp} />
+        <Route path="/cart" component={Cart} />
         <Redirect to="/restaurants" />
       </Switch>
     </AppLayout>

@@ -10,6 +10,7 @@ class Order < ApplicationRecord
   validate :order_items_belong_to_one_restaurant, on: :create
 
   before_create :calculate_total
+  after_initialize :assign_restaurant_id, if: :new_record?
 
   accepts_nested_attributes_for :order_items, reject_if: proc { |attributes| attributes[:amount].blank? || attributes[:meal_id].blank? }
 
@@ -45,6 +46,10 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def assign_restaurant_id
+    self.restaurant_id ||= order_items.first&.meal&.restaurant_id
+  end
 
   def calculate_total
     self.total = order_items.map(&:subtotal).inject(:+)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { withRouter } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/ToolBar'
 import Badge from '@material-ui/core/Badge'
@@ -9,7 +9,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MenuIcon from '@material-ui/icons/Menu'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Typography from '@material-ui/core/Typography'
-
 import { CartConsumer } from '../utils/cartContext'
 import { SessionConsumer } from '../utils/sessionContext'
 import MenuItems from './MenuItems'
@@ -25,6 +24,7 @@ class NavBar extends Component {
       currentUser: JSON.parse(localStorage.getItem('currentUser'))
     }
     this.handleMenuClick = this.handleMenuClick.bind(this)
+    this.goToCart = this.goToCart.bind(this)
   }
 
   handleMenuClick(e) {
@@ -32,6 +32,10 @@ class NavBar extends Component {
     const anchorEl = event.currentTarget
     this.setState({ menuOpen: !menuOpen, anchorEl }
     )
+  }
+
+  goToCart() {
+    this.props.history.push('/cart')
   }
 
   render() {
@@ -53,7 +57,7 @@ class NavBar extends Component {
           </IconButton>
           <Typography component='h1' variant='h6' style={{flexGrow: 1}}>Hegwin's Foodie</Typography>
 
-          <IconButton color='inherit' edge='end'>
+          <IconButton color='inherit' edge='end' onClick={this.goToCart}>
             <CartConsumer>
               { ({cart}) => {
                 return (
@@ -80,4 +84,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar
+export default withRouter(NavBar)

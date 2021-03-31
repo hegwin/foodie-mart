@@ -7,7 +7,8 @@ const styles = theme => ({
     width: '100%'
   },
   alert: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   }
 })
 
