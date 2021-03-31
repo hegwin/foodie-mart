@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { SessionConsumer } from '../utils/sessionContext'
 
 export default function AddressForm(props) {
-  const { handleChange } = props
+  const { handleChange, shipping_info } = props
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -46,6 +46,7 @@ export default function AddressForm(props) {
         <Grid item xs={12}>
           <TextField
             variant="outlined"
+            value={shipping_info.line1}
             required
             id="address1"
             name="line1"
@@ -59,6 +60,7 @@ export default function AddressForm(props) {
           <TextField
             variant="outlined"
             id="address2"
+            value={shipping_info.line2}
             name="line2"
             label="Address line 2"
             fullWidth
@@ -69,6 +71,7 @@ export default function AddressForm(props) {
         <Grid item xs={12} sm={6}>
           <TextField
             variant="outlined"
+            value={shipping_info.zip_code}
             required
             id="zip"
             name="zip_code"
@@ -81,6 +84,7 @@ export default function AddressForm(props) {
         <Grid item xs={12} sm={6}>
           <TextField
             variant="outlined"
+            value={shipping_info.phone}
             required
             id="phone"
             name="phone"
