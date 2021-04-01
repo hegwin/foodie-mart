@@ -12,6 +12,9 @@ import MyOrder from '../pages/MyOrder'
 import MyRestaurant from '../pages/MyRestaurant'
 import NewRestaurant from '../pages/MyRestaurant/new'
 import EditRestaurant from '../pages/MyRestaurant/edit'
+import MyMeal from '../pages/MyMeal'
+import NewMeal from '../pages/MyMeal/new'
+import EditMeal from '../pages/MyMeal/edit'
 import { SessionConsumer } from '../utils/sessionContext'
 
 export default (
@@ -28,6 +31,9 @@ export default (
               <Route path="/cart" component={Cart} />
               <Route path="/orders" component={MyOrder} />
               <Route path="/my_restaurants/:id/edit" component={EditRestaurant} />
+              <Route path="/my_restaurants/:restaurant_id/meals" exact component={MyMeal} />
+              <Route path="/my_restaurants/:restaurant_id/meals/new" component={NewMeal} />
+              <Route path="/my_restaurants/:restaurant_id/meals/:id/edit" component={EditMeal} />
               <Route path="/my_restaurants/new" component={NewRestaurant} />
               <Route path="/my_restaurants" component={MyRestaurant} />
               {

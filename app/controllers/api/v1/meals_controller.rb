@@ -36,6 +36,6 @@ class Api::V1::MealsController < Api::V1::BaseController
   private
 
   def meal_params
-    params.permit(:name, :description, :price, :restaurant_id)
+    params.permit(:name, :description, :price, :image_url, :restaurant_id)
   end
 end
