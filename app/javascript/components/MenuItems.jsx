@@ -14,7 +14,7 @@ export default function MenuItems(props) {
   const { currentUser, setCurrentUser } = props
   const history = useHistory()
 
-  const HomeLink = <MenuItem key="mi-0"><Link component={RouterLink} to="/">Home</Link></MenuItem>
+  const HomeLink = <MenuItem key="mi-0"><Link component={RouterLink} to={ currentUser && currentUser.role === 'restaurant_owner' ? "/my_restaurants" : "/restaurants" }>Home</Link></MenuItem>
 
   if (currentUser) {
     if ( currentUser.role === 'regular') {
@@ -27,7 +27,7 @@ export default function MenuItems(props) {
       return [
         HomeLink,
         <MenuItem key="mi-3"><Link component={RouterLink} to="/orders">My Orders</Link></MenuItem>,
-        <MenuItem key="mi-4"><Link component={RouterLink} to="/my_restaurants">My Restaurant</Link></MenuItem>,
+        <MenuItem key="mi-4"><Link component={RouterLink} to="/my_restaurants">Switch Restaurant</Link></MenuItem>,
         <MenuItem key="mi-5" onClick={() => { handleLogOut(setCurrentUser, history)}}>Log Out</MenuItem>
       ]
     }
