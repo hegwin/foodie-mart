@@ -83,6 +83,13 @@ class Cart extends Component {
     this.placeOrder = this.placeOrder.bind(this)
   }
 
+  componentDidMount() {
+    const token = localStorage.getItem('TOKEN')
+    if (!!!token) {
+      this.props.history.push('/sign_in')
+    }
+  }
+
   handleNext() {
     this.setState({ activeStep: this.state.activeStep + 1 })
   }
