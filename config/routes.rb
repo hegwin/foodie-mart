@@ -17,7 +17,9 @@ Rails.application.routes.draw do
       resources :users, only: %i[create update] do
         collection { get :me }
       end
-      resources :blacklists, only: %i[create index destroy]
+      resources :blacklists, only: %i[create index] do
+        collection { delete :destroy }
+      end
     end
   end
 

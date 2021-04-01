@@ -32,16 +32,16 @@ RSpec.describe 'Api::V1::Blacklists', type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/blacklists/:id' do
+  describe 'DELETE /api/v1/blacklists' do
     let!(:blacklist) { create :blacklist, restaurant_owner: restaurant_owner }
 
     it 'returns success with no content' do
-      delete "/api/v1/blacklists/#{blacklist.id}", headers: headers_for_owner
+      delete "/api/v1/blacklists", params: { user_id: blacklist.user_id }, headers: headers_for_owner
       expect(response).to have_http_status(204)
     end
 
     it 'removes a blacklist' do
-      expect { delete "/api/v1/blacklists/#{blacklist.id}", headers: headers_for_owner }.to \
+      expect { delete "/api/v1/blacklists?user_id=#{blacklist.user_id}", headers: headers_for_owner }.to \
         change { restaurant_owner.blacklists.count }.by(-1)
     end
   end

@@ -27,7 +27,7 @@ export default function MenuItems(props) {
       return [
         HomeLink,
         <MenuItem key="mi-3"><Link component={RouterLink} to="/orders">My Orders</Link></MenuItem>,
-        <MenuItem key="mi-4"><Link component={RouterLink} to="/my_restaurants">Switch Restaurant</Link></MenuItem>,
+        <MenuItem key="mi-4"><Link component={RouterLink} to="/my_restaurants">My Restaurants</Link></MenuItem>,
         <MenuItem key="mi-5" onClick={() => { handleLogOut(setCurrentUser, history)}}>Log Out</MenuItem>
       ]
     }

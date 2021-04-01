@@ -69,22 +69,34 @@ const actionButton = (id, status, currentUser, callback) => {
   }
 }
 
+const blockUserButton = (userId, currentUser, blocked, blockUser, unblockUser) => {
+  if (currentUser.role === 'restaurant_owner') {
+    if (blocked) {
+      return <Button variant="outlined" color="default" onClick={() => {unblockUser(userId)}}>Unblock This User</Button>
+    } else {
+      return <Button variant="contained" color="secondary" onClick={() => {blockUser(userId)}}>Block This User</Button>
+    }
+  } else {
+    return null
+  }
+}
+
 class MyOrder extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { orders: [] }
+    this.state = { orders: [], blockedUserIds: [] }
     this.handleActionButtonClick = this.handleActionButtonClick.bind(this)
+    this.handleBlockButtonClick  = this.handleBlockButtonClick.bind(this)
+    this.handleUnblockButtonClick  = this.handleUnblockButtonClick.bind(this)
   }
 
   componentDidMount() {
     const token = localStorage.getItem('TOKEN')
-    let url = '/api/v1/orders'
-    const restaurant_id = 6
+    const orderUrl = '/api/v1/orders'
+    const blacklistUrl = '/api/v1/blacklists'
 
-    if (!!restaurant_id) { url += `?restaurant_id=${restaurant_id}` }
-
-    fetch(url, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } })
+    fetch(orderUrl, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } })
       .then(response => {
         if (response.ok) {
           return response.json()
@@ -93,6 +105,16 @@ class MyOrder extends Component {
         throw new Error('Request failed.')
       })
       .then(json => this.setState({ orders: json }))
+
+    fetch(blacklistUrl, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+
+        throw new Error('Not for regular user.')
+      })
+      .then(json => this.setState({ blockedUserId: json.map((blacklist) => { return blacklist.user_id }) }))
   }
 
   handleActionButtonClick(id, status, role) {
@@ -105,7 +127,7 @@ class MyOrder extends Component {
           return response.json()
         }
 
-        throw new Error('Request failed')
+        throw new Error('Request failed.')
       })
       .then(json => {
         let { orders } = this.state
@@ -117,8 +139,38 @@ class MyOrder extends Component {
     console.log(url)
   }
 
+  handleBlockButtonClick(userId) {
+    const token = localStorage.getItem('TOKEN')
+    const url   = '/api/v1/blacklists'
+    const payload = { user_id: userId }
+
+    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}, body: JSON.stringify(payload) })
+      .then(response => {
+        if (response.ok) {
+          let { blockedUserIds } = this.state
+          blockedUserIds.push(userId)
+          this.setState({ blockedUserIds: blockedUserIds })
+        }
+      })
+  }
+
+  handleUnblockButtonClick(userId) {
+    const token = localStorage.getItem('TOKEN')
+    const url   = `/api/v1/blacklists?user_id=${userId}`
+
+    fetch(url, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`} })
+      .then(response => {
+        if (response.ok) {
+          let { blockedUserIds } = this.state
+          const index = blockedUserIds.indexOf(userId)
+          blockedUserIds.splice(index, 1)
+          this.setState({ blockedUserIds: blockedUserIds })
+        }
+      })
+  }
+
   render() {
-    const { orders } = this.state
+    const { orders, blockedUserIds } = this.state
     const { classes } = this.props
     return(
       <main className={classes.root}>
@@ -165,13 +217,18 @@ class MyOrder extends Component {
                 </List>
 
               </CardContent>
-              <CardActions>
-                <SessionConsumer>
-                  {
-                    ({currentUser}) => { return actionButton(order.id, order.status, currentUser, this.handleActionButtonClick )}
-                  }
-                </SessionConsumer>
-              </CardActions>
+              <SessionConsumer>
+              {
+                ({currentUser}) => {
+                  return (
+                    <CardActions>
+                      { actionButton(order.id, order.status, currentUser, this.handleActionButtonClick) }
+                      { blockUserButton(order.user.id, currentUser, blockedUserIds.indexOf(order.user.id) >= 0, this.handleBlockButtonClick, this.handleUnblockButtonClick) }
+                    </CardActions>
+                  )
+                }
+              }
+              </SessionConsumer>
             </Card>
           )})
         }
