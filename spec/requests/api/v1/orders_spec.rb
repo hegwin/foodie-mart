@@ -71,18 +71,13 @@ RSpec.describe 'Api::V1::Orders', type: :request do
       end
 
       it 'only lists orders belong to my restaurant' do
-        get "/api/v1/orders?restaurant_id=#{restaurant.id}", headers: headers_for_owner
+        get '/api/v1/orders', headers: headers_for_owner
         expect(response).to have_http_status(200)
         expect(json.count).to eq(3)
       end
 
-      it 'denies when I try to see orders belong to another restaurant' do
-        get "/api/v1/orders?restaurant_id=#{other_restaurant.id}", headers: headers_for_owner
-        expect(response).to have_http_status(403)
-      end
-
       it 'filter by status' do
-        get "/api/v1/orders?restaurant_id=#{restaurant.id}&status_eq=placed", headers: headers_for_owner
+        get "/api/v1/orders?status_eq=placed", headers: headers_for_owner
 
         expect(response).to have_http_status(200)
         expect(json.count).to eq(2)

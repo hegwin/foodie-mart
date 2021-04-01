@@ -5,7 +5,7 @@ class Api::V1::OrdersController < Api::V1::BaseController
   rescue_from AASM::InvalidTransition, with: :state_change_denied
 
   def index
-    @orders = OrderPolicy::Scope.new(current_user, Order, params.permit(:restaurant_id)).resolve.includes(:user, :order_items, :restaurant, :audits).order(created_at: :desc)
+    @orders = OrderPolicy::Scope.new(current_user, Order).resolve.includes(:user, :order_items, :restaurant, :audits).order(created_at: :desc)
 
     @orders = @orders.where(status: params[:status_eq]) if params[:status_eq].present?
   end
