@@ -1,24 +1,58 @@
-# README
+# Foodie Mart
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a demo project to play with Ruby on Rails, React and Material-UI.
 
-Things you may want to cover:
+It aims at food ordering and delivering.
 
-* Ruby version
+## Roles
 
-* System dependencies
+* Restaurant Owner
 
-* Configuration
+* Regular User
 
-* Database creation
+## Scenarios
 
-* Database initialization
 
-* How to run the test suite
+### All users
 
-* Services (job queues, cache servers, search engines, etc.)
+* Sign In/Sign Up/Log out
 
-* Deployment instructions
 
-* ...
+### Restaurant Owner
+
+* Restaurants CRUD
+
+* Meals CRUD
+
+* Order management
+
+* User blockage
+
+### Regular User
+
+* View nearest restaurants
+
+* View meals
+
+* Place an order
+
+* Order cancel/confirm receipt
+
+
+# Development
+
+* Ruby 2.7.2
+
+* Rails 6.1.3
+
+* PostgreSQL 12.3
+
+* React 17.0.1
+
+* Material-UI 4.11.3
+
+# Test Suites
+
+Backend: RSpec + FactoryBot + Faker
+
+Frontend: TODO
